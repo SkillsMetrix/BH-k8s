@@ -1,13 +1,17 @@
-cat <<EOF > /usr/share/nginx/html/test.html
-<!DOCTYPE html>
-<html>
-<head>
-<title>Testing..</title>
-</head>
-<body>
-<h1 style="color:rgb(90,70,250);">Hello, Kubernetes...!</h1>
-<h2>Congratulations, you passed :-) </h2>
-</body>
-</html>
-EOF
-exit
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-caching-pod
+  
+  labels:
+    app: nginx-init
+spec:
+  initContainers:
+    - name: init-service
+      image: busybox:1.28
+      command: ['sh', '-c' , 'until nslookup myservice; do echo waiting for myservice; sleep 5; done;']
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh' ,'-c', 'echo app is running  && sleep 3600']
