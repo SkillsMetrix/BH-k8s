@@ -1,17 +1,20 @@
-
+# nginx-rc.yaml  
 apiVersion: v1
-kind: Pod
+kind: ReplicationController
 metadata:
-  name: nginx-caching-pod
-  
-  labels:
-    app: nginx-init
+  name: nginx-rc
 spec:
-  initContainers:
-    - name: init-service
-      image: busybox:1.28
-      command: ['sh', '-c' , 'until nslookup myservice; do echo waiting for myservice; sleep 5; done;']
-  containers:
-  - name: myapp-container
-    image: busybox:1.28
-    command: ['sh' ,'-c', 'echo app is running  && sleep 3600']
+  replicas: 3
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+        ports:
+        - containerPort: 80
+  selector:
+    app: nginx-app
