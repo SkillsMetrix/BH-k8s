@@ -5,8 +5,8 @@ metadata:
   name: custom-service
 subsets:
   - addresses:
-    - ip: 172.31.44.184
+      - ip: 172.31.44.184
 
-      ports:
+    ports:
        - port: 80
     
