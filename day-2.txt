@@ -1,19 +1,24 @@
-# nginx-ds-subsetnodes.yaml
+
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
-  name: nginx-ds
+  name: nginx-deploy
+  labels:
+      app: nginx-app
 spec:
+  replicas: 3
   template:
     metadata:
       labels:
-        name: nginx
+        app: nginx-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx
-      nodeSelector:
-        disktype: ssd
+        - name: nginx-container
+          image: nginx
+          ports:
+            - containerPort: 80
+    
   selector:
     matchLabels:
-      name: nginx
+      app: nginx-app
+      
