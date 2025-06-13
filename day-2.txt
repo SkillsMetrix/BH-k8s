@@ -1,10 +1,12 @@
+
 apiVersion: v1
-kind: Pod
+kind: Endpoints
 metadata:
-  name: access-pod
-  
-spec:
-  containers:
-  - name: access-pod
-    image: ubuntu:latest
-    commnd: ["sh" ,"-c" , "sleep 1h"]
+  name: custom-service
+subsets:
+  - addresses:
+    - ip: 172.31.44.184
+
+      ports:
+       - port: 80
+    
