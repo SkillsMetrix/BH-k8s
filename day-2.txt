@@ -22,3 +22,32 @@ spec:
     matchLabels:
       app: nginx-app
       
+---------
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deploy
+  labels:
+      app: redis
+spec:
+  replicas: 5
+
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis-container
+          image: redis:5.0
+         
+    
+  selector:
+    matchLabels:
+      app: redis
+  strategy: 
+    type: Recreate
+      
