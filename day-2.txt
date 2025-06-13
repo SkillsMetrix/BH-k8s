@@ -1,24 +1,10 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: nginx-deployment-1.0
-  labels:
-    app: nginx-1.0
-    env: prod
+  name: access-pod
+  
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx-1.0
-      env: prod
-  template:
-    metadata:
-      labels:
-        app: nginx-1.0
-        env: prod
-    spec:
-      containers:
-        - name: nginx
-          image: nginx
-          ports:
-            - containerPort: 80
+  containers:
+  - name: access-pod
+    image: ubuntu:latest
+    commnd: ["sh" ,"-c" , "sleep 1h"]
