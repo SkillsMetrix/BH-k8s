@@ -1,27 +1,32 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
+  name: apache-server
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: apache-server
   template:
     metadata:
       labels:
-        app: redis
+        app: apache-server
     spec:
       containers:
-      - name: redis
-        image: redis:6.2
-        resources:
-          requests:
-            memory: 20Mi
-            cpu: 100m
-
-          limits:
-            memory: 40Mi
-            cpu: 1
-
+      - name: apache-server
+        image: httpd:2.4
+        ports:
+        - name: http
+          containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
