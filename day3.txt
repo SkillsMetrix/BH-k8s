@@ -1,29 +1,27 @@
-# deployment-using-secret.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: secret-demo
+  name: redis
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
-      app: secret-demo
+      app: redis
   template:
     metadata:
       labels:
-        app: secret-demo
+        app: redis
     spec:
       containers:
-      - name: demo-container
-        image: nginx
-        env:
-        - name: USER_NAME
-          valueFrom:
-            secretKeyRef:
-              name: my-secret
-              key: username
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: my-secret
-              key: password
+      - name: redis
+        image: redis:6.2
+        resources:
+          requests:
+            memory: 20Mi
+            cpu: 100m
+
+          limits:
+            memory: 40Mi
+            cpu: 1
+
