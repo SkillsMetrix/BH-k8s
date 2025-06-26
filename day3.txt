@@ -1,20 +1,51 @@
-
-
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-hostpath
-  labels:
-    name: myapp
+  name: app-pod
 spec:
   containers:
-  - name: nginx-container
-    image: nginx
-    volumeMounts:
-      - name: test-vol
-        mountPath: /test-mnt
-  volumes:
-    - name: test-vol
-      hostPath:
-        path: /test-vol
+  - name: app-container
+    image: busybox
+    command: ["sh", "-c", "env && sleep 3600"]
+    env:
+    - name: APP_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: my-config
+          key: APP_NAME
+    - name: APP_ENV
+      valueFrom:
+        configMapKeyRef:
+          name: my-config
+          key: APP_ENV
+---------------
 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp-container
+        image: busybox
+        command: ["sh", "-c", "env && sleep 3600"]
+        env:
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: APP_NAME
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: APP_ENV
