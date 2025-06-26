@@ -1,53 +1,19 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: apache-server
+  name: countdown-job-ttl
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: apache-server
+  completions: 5
+  ttlSecondsAfterFinished: 10
   template:
     metadata:
-      labels:
-        app: apache-server
+      name: countdown-pod
     spec:
       containers:
-      - name: apache-server
-        image: httpd:2.4
-        ports:
-        - name: http
-          containerPort: 80
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
-
-
-
-
----
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: apache-service
-spec:
-  type: NodePort
-  ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
-    name: http
-    nodePort: 30080
-  selector:
-    app: apache-server
+        - name: counter
+          image: centos:7
+          command:
+            - "bin/bash"
+            - "-c"
+            - "for i in 9 8 7 6 5 4 3 2 1 ; do echo $i ; sleep 1 ; done"
+      restartPolicy: Never
